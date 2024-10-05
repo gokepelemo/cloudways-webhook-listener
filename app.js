@@ -25,7 +25,7 @@ async function getAccessToken(email, apiKey) {
       headers: {
         "Content-Type": "application/json",
         email: email,
-        api_key: api_key,
+        api_key: apiKey,
       },
     }
   );
