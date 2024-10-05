@@ -14,3 +14,5 @@ The webhook will listen to GET and POST requests using query params, or properti
 - `git_url` (optional): URL of the git repository. Ensure that the git repository host contains the SSH key of the Cloudways server. More details on this [knowledgebase article](https://support.cloudways.com/en/articles/5124087-deploy-code-to-your-application-using-git#h_052e37347c).
 - `branch_name`: Branch to deploy code from.
 - `deploy_path`: Path to deploy the code to the server, relative to the `public_html` directory.
+
+The code example can be extracted without the Express application and used in a Github action, or Gitlab runner if not using webhooks. Environment variables can be set as secrets instead on those environments.
