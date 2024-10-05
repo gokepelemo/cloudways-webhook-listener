@@ -16,10 +16,10 @@ const url = process.env.API_URL || "https://api.cloudways.com/api/v1";
 const email = process.env.EMAIL || "john@doe.com";
 const apiKey = process.env.API_KEY || "your-api-key";
 
-//
-async function getAccessToken(email, api_key) {
+// Get an oAuth Token for the request
+async function getAccessToken(email, apiKey) {
   const response = await fetch(
-    `${url}/oauth/access_token?email=${email}&api_key=${api_key}`,
+    `${url}/oauth/access_token?email=${email}&api_key=${apiKey}`,
     {
       method: "POST",
       headers: {
@@ -52,11 +52,11 @@ app.all("/webhook/:serverId/:appId", async (req, res) => {
         "branch_name": req.body.branch_name || req.query.branch_name,
         "deploy_path": req.body.deploy_path || req.query.deploy_path,
       },
-      body: JSON.stringify(req.body), // Send the request body to the external API
+      body: JSON.stringify(req.body),
     });
 
     const data = await response.json();
-    // Send the response from the external API back to the client
+    // Send the response from the Cloudways API back to the client
     res.status(response.status).json(data);
   } catch (error) {
     // Handle errors
@@ -67,7 +67,7 @@ app.all("/webhook/:serverId/:appId", async (req, res) => {
   }
 });
 
-// Start the server
+// Start the Express server
 app.listen(port, () => {
   console.log(`Webhook listener is running on ${appUrl}:${port}`);
 });
