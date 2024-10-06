@@ -40,19 +40,27 @@ app.all("/webhook/:serverId/:appId", async (req, res) => {
   const accessToken = await getAccessToken(email, apiKey);
   try {
     // Make a POST call to the Cloudways API
-    const endpoint = req.body.git_url || req.query.git_url ? "/git/clone" : "/git/pull";
+    const endpoint =
+      req.body.git_url || req.query.git_url ? "/git/clone" : "/git/pull";
+    let git_url =
+      req.body.git_url || req.query.git_url
+        ? { git_url: req.body.git_url || req.query.git_url }
+        : {};
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const payload = {
+      app_id: appId,
+      server_id: serverId,
+      branch_name: req.body.branch_name || req.query.branch_name,
+      deploy_path: req.body.deploy_path || req.query.deploy_path,
+      git_url,
+    };
     const response = await fetch(`${url}${endpoint}`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`,
-        "app_id": appId,
-        "server_id": serverId,
-        "git_url": req.body.git_url || req.query.git_url,
-        "branch_name": req.body.branch_name || req.query.branch_name,
-        "deploy_path": req.body.deploy_path || req.query.deploy_path,
-      },
-      body: JSON.stringify(req.body),
+      headers: headers,
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();
