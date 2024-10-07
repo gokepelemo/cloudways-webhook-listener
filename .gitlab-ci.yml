@@ -1,0 +1,18 @@
+stages:
+  - deploy
+
+variables:
+  EMAIL: $EMAIL
+  API_KEY: $API_KEY
+  APP_ID: $APP_ID
+  SERVER_ID: $SERVER_ID
+  DEPLOY_PATH: $DEPLOY_PATH
+  GIT_URL: git@gitlab.com:${CI_PROJECT_PATH}.git
+
+run_script:
+  stage: deploy
+  script:
+    - npm install
+    - node run.js $GIT_URL $CI_COMMIT_REF_NAME
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

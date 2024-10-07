@@ -10,6 +10,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch) # This condition ensures the action runs only when the branch is the default branch
 
     steps:
     - name: Checkout repository
@@ -23,56 +24,11 @@ jobs:
     - name: Deploy to Cloudways
       env:
         SERVER_ID: ${{ secrets.SERVER_ID }}
-        GIT_URL: ${{ github.repositoryUrl }}
+        GIT_URL: git@github.com:${{ github.repository_owner }}/${{ github.repository }}.git
         BRANCH_NAME: ${{ github.ref_name }}
         DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         API_URL: ${{ secrets.API_URL }}
         EMAIL: ${{ secrets.EMAIL }}
         API_KEY: ${{ secrets.API_KEY }}
       run: |
-        node -e "
-        const fetch = require('node-fetch');
-
-        async function getAccessToken(email, apiKey) {
-          const response = await fetch(
-            `${process.env.API_URL}/oauth/access_token?email=${email}&api_key=${apiKey}`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                email: email,
-                api_key: apiKey,
-              },
-            }
-          );
-
-          const data = await response.json();
-          return data.access_token;
-        }
-
-        (async () => {
-          try {
-            const accessToken = await getAccessToken(process.env.EMAIL, process.env.API_KEY);
-
-            const response = await fetch(process.env.API_URL, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-              },
-              body: JSON.stringify({
-                server_id: process.env.SERVER_ID,
-                git_url: process.env.GIT_URL,
-                branch_name: process.env.BRANCH_NAME,
-                deploy_path: process.env.DEPLOY_PATH,
-              })
-            });
-
-            const data = await response.json();
-            console.log('Response:', data);
-          } catch (error) {
-            console.error('Error:', error.message);
-            process.exit(1);
-          }
-        })();
-        "
+        node run.js $GIT_URL $BRANCH_NAME
