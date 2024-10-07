@@ -15,4 +15,4 @@ The webhook will listen to GET and POST requests using query params, or properti
 - `branch_name`: Branch to deploy code from.
 - `deploy_path`: Path to deploy the code to the server, relative to the `public_html` directory.
 
-The code example can be extracted and used in a Github action, or Gitlab runner if not using webhooks. Environment variables can be set as secrets instead on those environments. An example of a Github Action is added to `deploy.yml`.
+Examples for a Github action and Gitlab job can be found in `deploy.yml` and `.gitlab-ci.yml` respectively. Environment variables are set as secrets on Github and project variables on Gitlab.
