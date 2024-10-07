@@ -1,0 +1,7 @@
+stages:
+  - deploy
+
+run_script:
+  stage: deploy
+  script:
+    - node run.js $CI_REPOSITORY_URL $CI_COMMIT_REF_NAME
