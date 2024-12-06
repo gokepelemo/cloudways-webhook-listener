@@ -15,7 +15,7 @@ function consoleMessage(message) {
 }
 
 async function getAccessToken(email, apiKey) {
-  message("Getting access token...");
+  consoleMessage("Getting access token...");
   const response = await fetch(
     `https://api.cloudways.com/api/v1/oauth/access_token?email=${email}&api_key=${apiKey}`,
     {
