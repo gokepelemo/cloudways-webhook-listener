@@ -30,7 +30,7 @@ async function getAccessToken(email, apiKey) {
     }
   );
   let accessToken = await response.json();
-  message("Access token received, now cloning the repository...");
+  consoleMessage("Access token received, now cloning the repository...");
   return accessToken.access_token;
 }
 
